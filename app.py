@@ -25,7 +25,7 @@ def catch_all(path):
     else:
         message = f"I know that you're trying to access {path}!"
         ip = f"{ip}"
-    return render_template('bot.html', path=path, message=message, ip=ip), 200
+    return render_template('bot.html', path=path, message=message, ip=ip), 404
 
 @app.after_request
 def log_request(response):
