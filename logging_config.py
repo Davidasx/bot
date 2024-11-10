@@ -33,19 +33,6 @@ class ColorFormatter(logging.Formatter):
 
         return super().format(record)
 
-class SensitiveInfoFilter(logging.Filter):
-    def filter(self, record):
-        message = record.getMessage()
-        if 'GET' in message or 'POST' in message:
-            parts = message.split(' ')
-            for i, part in enumerate(parts):
-                if part.startswith('/'):
-                    url = part.split('?')[0]
-                    parts[i] = url
-            record.msg = ' '.join(parts)
-            record.args = ()
-        return True
-
 def setup_logging():
     # Access Logger
     access_logger = logging.getLogger('access')
@@ -55,7 +42,6 @@ def setup_logging():
                                       '%Y-%m-%d %H:%M:%S')
     access_handler.setFormatter(access_formatter)
     access_logger.addHandler(access_handler)
-    access_logger.addFilter(SensitiveInfoFilter())
 
     werkzeug_logger = logging.getLogger('werkzeug')
     werkzeug_logger.disabled = True

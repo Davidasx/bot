@@ -13,6 +13,10 @@ access_logger = setup_logging()
 def index():
     return send_from_directory('.', 'index.html')
 
+@app.route('/<path:path>')
+def catch_all(path):
+    return send_from_directory('.', 'index.html')
+
 @app.after_request
 def log_request(response):
     ip = request.remote_addr
