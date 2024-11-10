@@ -1,21 +1,31 @@
-from flask import Flask, send_from_directory, request, jsonify, Response
-import json
-import time
+from flask import Flask, send_from_directory, request, jsonify, Response, render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
 import logging
 from logging_config import setup_logging
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
 
 access_logger = setup_logging()
+
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    path = ""
+    message = "You'll find nothing here, bot."
+    ip = request.remote_addr
+    ip = f"{ip}"
+    return render_template('bot.html', path=path, message=message, ip=ip), 404
 
 @app.route('/<path:path>')
 def catch_all(path):
-    return send_from_directory('.', 'index.html')
+    ip = request.remote_addr
+    if 'php' in path.lower():
+        message = f"I know that you're trying to access {path} but I'll NEVER use PHP for my website!"
+        ip = f"{ip}"
+    else:
+        message = f"I know that you're trying to access {path}!"
+        ip = f"{ip}"
+    return render_template('bot.html', path=path, message=message, ip=ip), 404
 
 @app.after_request
 def log_request(response):
