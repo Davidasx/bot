@@ -14,7 +14,7 @@ def index():
     message = "You'll find nothing here, bot."
     ip = request.remote_addr
     ip = f"{ip}"
-    return render_template('bot.html', path=path, message=message, ip=ip), 404
+    return render_template('bot.html', path=path, message=message, ip=ip), 200
 
 @app.route('/<path:path>')
 def catch_all(path):
@@ -25,7 +25,7 @@ def catch_all(path):
     else:
         message = f"I know that you're trying to access {path}!"
         ip = f"{ip}"
-    return render_template('bot.html', path=path, message=message, ip=ip), 404
+    return render_template('bot.html', path=path, message=message, ip=ip), 200
 
 @app.after_request
 def log_request(response):
